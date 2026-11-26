@@ -6,12 +6,12 @@ from pyspark.sql import functions as F
 from pyspark.sql.types import *
 
 @dp.table(
-    name="fraud_dectection.data_ingection.silver",
+    name="silver",
     comment="Parsed, cleaned, and feature-enriched transactions"
 )
 @dp.expect_or_drop("valid_id", "id IS NOT NULL")
 def transactions_silver() -> DataFrame:
-    bronze_df = spark.readStream.table("fraud_dectection.data_ingection.bronze")
+    bronze_df = spark.readStream.table("bronze")
 
     inner_schema = StructType([
         StructField("id", LongType(), True),
@@ -62,5 +62,4 @@ def transactions_silver() -> DataFrame:
             F.current_timestamp().alias("silver_ingestion_timestamp")
         )
         .withColumn("event_ts", F.to_timestamp(F.from_unixtime(F.col("event_timestamp"))))
-        .withColumn("amount_percentage", F.col("amount_usd") / (F.col("account_balance_usd") + F.lit(1e-5)))
     )

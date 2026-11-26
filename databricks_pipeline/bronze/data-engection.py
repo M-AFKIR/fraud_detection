@@ -9,7 +9,7 @@ from pyspark.sql.types import (
 
 
 @dp.table(
-    name="fraud_dectection.data_ingection.bronze",
+    name="bronze",
     comment="Raw Kafka events ingested from Confluent Cloud"
 )
 
